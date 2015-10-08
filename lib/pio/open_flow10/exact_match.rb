@@ -1,4 +1,5 @@
 require 'pio/open_flow10/match'
+require 'pio/ethernet_header'
 require 'pio/parser'
 
 module Pio
@@ -8,8 +9,8 @@ module Pio
     # rubocop:disable AbcSize
     def initialize(packet_in)
       data = packet_in.data
-      case data
-      when Pio::Parser::IPv4Packet
+      case data.ether_type
+      when Pio::EthernetHeader::EtherType::IPV4
         options = {
           in_port: packet_in.in_port,
           ether_source_address: packet_in.source_mac,
@@ -24,22 +25,7 @@ module Pio
           transport_source_port: data.transport_source_port,
           transport_destination_port: data.transport_destination_port
         }
-      when Arp::Request
-        options = {
-          in_port: packet_in.in_port,
-          ether_source_address: packet_in.source_mac,
-          ether_destination_address: packet_in.destination_mac,
-          vlan_vid: data.vlan_vid,
-          vlan_priority: data.vlan_pcp,
-          ether_type: data.ether_type,
-          ip_tos: 0,
-          ip_protocol: data.operation,
-          ip_source_address: data.sender_protocol_address,
-          ip_destination_address: data.target_protocol_address,
-          transport_source_port: 0,
-          transport_destination_port: 0
-        }
-      when Arp::Reply
+      when Pio::EthernetHeader::EtherType::ARP
         options = {
           in_port: packet_in.in_port,
           ether_source_address: packet_in.source_mac,
