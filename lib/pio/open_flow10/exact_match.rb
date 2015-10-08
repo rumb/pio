@@ -39,6 +39,21 @@ module Pio
           transport_source_port: 0,
           transport_destination_port: 0
         }
+      when Arp::Reply
+        options = {
+          in_port: packet_in.in_port,
+          ether_source_address: packet_in.source_mac,
+          ether_destination_address: packet_in.destination_mac,
+          vlan_vid: data.vlan_vid,
+          vlan_priority: data.vlan_pcp,
+          ether_type: data.ether_type,
+          ip_tos: 0,
+          ip_protocol: data.operation,
+          ip_source_address: data.sender_protocol_address,
+          ip_destination_address: data.target_protocol_address,
+          transport_source_port: 0,
+          transport_destination_port: 0
+        }
       end
       @match = Pio::Match.new(options)
     end
