@@ -10,7 +10,7 @@ module Pio
     def initialize(packet_in)
       data = packet_in.data
       case data.ether_type
-      when Pio::EthernetHeader::EtherType::IPV4
+      when EthernetHeader::EtherType::IPV4
         options = {
           in_port: packet_in.in_port,
           ether_source_address: packet_in.source_mac,
@@ -25,7 +25,7 @@ module Pio
           transport_source_port: data.transport_source_port,
           transport_destination_port: data.transport_destination_port
         }
-      when Pio::EthernetHeader::EtherType::ARP
+      when EthernetHeader::EtherType::ARP
         options = {
           in_port: packet_in.in_port,
           ether_source_address: packet_in.source_mac,
