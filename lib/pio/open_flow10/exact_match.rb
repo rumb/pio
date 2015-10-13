@@ -40,6 +40,8 @@ module Pio
           transport_source_port: 0,
           transport_destination_port: 0
         }
+      else
+        fail NotImplementedError, "Ethernet Type [#{data.ether_type}] is not yet supported."
       end
       @match = Pio::Match.new(options)
     end
